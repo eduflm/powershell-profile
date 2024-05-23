@@ -15,9 +15,6 @@ if (Test-Path($ChocolateyProfile)) {
     Import-Module "$ChocolateyProfile"
 }
 
-Remove-Alias gc
-Remove-Alias gp
-
 # Check for Profile Updates
 function Update-Profile {
     if (-not $global:canConnectToGitHub) {
@@ -80,6 +77,10 @@ function prompt {
 }
 $adminSuffix = if ($isAdmin) { " [ADMIN]" } else { "" }
 $Host.UI.RawUI.WindowTitle = "PowerShell {0}$adminSuffix" -f $PSVersionTable.PSVersion.ToString()
+
+# Removing some alias
+Remove-Item alias:gc -force
+Remove-Item alias:gp -force
 
 # Utility Functions
 function Test-CommandExists {
