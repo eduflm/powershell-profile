@@ -126,19 +126,31 @@ function notes-open {
     code 'C:\Users\edelima\OneDrive - Microsoft\Notes\'
 }
 
-function notes-new($fileName) {
-    $newNoteName = "new-note.md";
+function notes-new($fileName, $type = '') {
+    $newNoteName = "blank-note";
     if ($fileName) {
         $newNoteName = $fileName
     }
-    $newNotePath = "C:\Users\edelima\OneDrive - Microsoft\Notes\" + $newNoteName
+
+    $finalFolder = ''
+    switch ($type) {
+        "blank" { $finalFolder = 'uncategorized' }
+        "task" { $finalFolder = 'tasks' }
+        "meeting" { $finalFolder = 'meetings' }
+        Default { 
+            $finalFolder = 'uncategorized' 
+            $type = 'blank' 
+            Write-Host 'Type invalid or not provided. Creating blank note.'}
+    }
+
+    $newNotePath = "C:\Users\edelima\OneDrive - Microsoft\Notes\${finalFolder}\${newNoteName}.md"
     if (Test-Path $newNotePath) {
         Write-Host "A new note in progress exists. Especify a name or rename the file " + $newNotePath
         return
     }
 
-    cp 'C:\Users\edelima\OneDrive - Microsoft\Notes\templates\template.md' $newNotePath
-    code 'C:\Users\edelima\OneDrive - Microsoft\Notes\' $newNotePath
+    cp "C:\Users\edelima\OneDrive - Microsoft\Notes\templates\${type}.md" $newNotePath
+    code "C:\Users\edelima\OneDrive - Microsoft\Notes\" $newNotePath
 }
 
 function reload-profile {
