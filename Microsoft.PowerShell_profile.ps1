@@ -122,6 +122,25 @@ function uptime {
     }
 }
 
+function notes-open {
+    code 'C:\Users\edelima\OneDrive - Microsoft\Notes\'
+}
+
+function notes-new($fileName) {
+    $newNoteName = "new-note.md";
+    if ($fileName) {
+        $newNoteName = $fileName
+    }
+    $newNotePath = "C:\Users\edelima\OneDrive - Microsoft\Notes\" + $newNoteName
+    if (Test-Path $newNotePath) {
+        Write-Host "A new note in progress exists. Especify a name or rename the file " + $newNotePath
+        return
+    }
+
+    cp 'C:\Users\edelima\OneDrive - Microsoft\Notes\templates\template.md' $newNotePath
+    code 'C:\Users\edelima\OneDrive - Microsoft\Notes\' $newNotePath
+}
+
 function reload-profile {
     & $profile
 }
