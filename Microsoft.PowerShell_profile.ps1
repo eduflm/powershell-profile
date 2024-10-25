@@ -126,6 +126,13 @@ function notes-open {
     code 'C:\Users\edelima\OneDrive - Microsoft\Notes\'
 }
 
+function generate-guid($count = 1) {
+    for (($i = 0); $i -lt $count; $i++)
+    {
+        [guid]::NewGuid()
+    }
+}
+
 function notes-new($fileName, $type = '') {
     $newNoteName = "blank-note";
     if ($fileName) {
@@ -218,7 +225,24 @@ function docs { Set-Location -Path $HOME\Documents }
 
 function dtop { Set-Location -Path $HOME\Desktop }
 
-function repos { Set-Location -Path $HOME\Repos }
+function repos($repo) {
+    if ($repo -eq "portal")
+    {
+        Set-Location -Path $HOME\Repos\infrastructure_azure_ecs-experimentation
+    } 
+    elseif ($repo -eq "service") {
+        Set-Location -Path $HOME\Repos\infrastructure_azure_ecs
+    }
+    else 
+    {
+        Set-Location -Path $HOME\Repos
+    }
+}
+
+function repos-lazygit($repo) {
+    repos($repo)
+    Start-Process -FilePath "lazygit" -NoNewWindow
+}
 
 # Quick Access to Editing the Profile
 function ep { vim $PROFILE }
@@ -288,4 +312,10 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
     } catch {
         Write-Error "Failed to install zoxide. Error: $_"
     }
+}
+
+function initialize-azurite {
+    $additionalParams = "--skipApiVersionCheck"
+    $azuritePath = 'C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\Extensions\Microsoft\Azure Storage Emulator\azurite.exe'
+    Start-Process -FilePath $azuritePath -ArgumentList $additionalParams
 }
